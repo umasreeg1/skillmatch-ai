@@ -187,18 +187,18 @@ NAV_OPTIONS = [
 ]
 
 # ---------------------------------------------------------
-# SESSION STATE & EARLY CALLBACK EXECUTION
+# SESSION STATE INITIALIZATION (BEFORE ANY WIDGET INSTANTIATION)
 # ---------------------------------------------------------
+if 'app_active_page' not in st.session_state:
+    st.session_state['app_active_page'] = "🏠 Dashboard & Resume Analyzer"
 if 'current_analysis' not in st.session_state:
-    st.session_state.current_analysis = None
+    st.session_state['current_analysis'] = None
 if 'resume_text' not in st.session_state:
-    st.session_state.resume_text = ""
+    st.session_state['resume_text'] = ""
 if 'job_desc' not in st.session_state:
-    st.session_state.job_desc = JOB_TEMPLATES['junior_aiml']['description']
+    st.session_state['job_desc'] = JOB_TEMPLATES['junior_aiml']['description']
 if 'job_title' not in st.session_state:
-    st.session_state.job_title = JOB_TEMPLATES['junior_aiml']['title']
-if 'current_page' not in st.session_state:
-    st.session_state.current_page = "🏠 Dashboard & Resume Analyzer"
+    st.session_state['job_title'] = JOB_TEMPLATES['junior_aiml']['title']
 
 # Pre-load & cache SentenceTransformer model
 @st.cache_resource
@@ -208,60 +208,54 @@ def cached_transformer_model():
 # Warmup model
 cached_transformer_model()
 
-# Process Pending Demo Request BEFORE Rendering Any Widgets
-if st.session_state.get("run_demo_requested"):
-    st.session_state.resume_text = DEMO_RESUME_TEXT
-    st.session_state.job_desc = JOB_TEMPLATES['junior_aiml']['description']
-    st.session_state.job_title = JOB_TEMPLATES['junior_aiml']['title']
+# ---------------------------------------------------------
+# EARLY REQUEST PROCESSING (BEFORE RENDERING NAVIGATION WIDGET)
+# ---------------------------------------------------------
+if st.session_state.get("demo_requested"):
+    st.session_state['resume_text'] = DEMO_RESUME_TEXT
+    st.session_state['job_desc'] = JOB_TEMPLATES['junior_aiml']['description']
+    st.session_state['job_title'] = JOB_TEMPLATES['junior_aiml']['title']
     
     # Run real NLP analysis pipeline
     res = HybridMatcher.analyze(
-        st.session_state.resume_text,
-        st.session_state.job_desc,
-        st.session_state.job_title
+        st.session_state['resume_text'],
+        st.session_state['job_desc'],
+        st.session_state['job_title']
     )
-    st.session_state.current_analysis = res
-    st.session_state.current_page = "📊 AI Job Match Score"
-    st.session_state.run_demo_requested = False
+    st.session_state['current_analysis'] = res
+    # Update widget session state BEFORE creating the radio widget!
+    st.session_state['app_active_page'] = "📊 AI Job Match Score"
+    st.session_state['demo_requested'] = False
 
-# Process Pending Manual Analysis Request BEFORE Rendering Any Widgets
-if st.session_state.get("run_analysis_requested"):
-    if st.session_state.resume_text.strip() and st.session_state.job_desc.strip():
+if st.session_state.get("analysis_requested"):
+    if st.session_state['resume_text'].strip() and st.session_state['job_desc'].strip():
         res = HybridMatcher.analyze(
-            st.session_state.resume_text,
-            st.session_state.job_desc,
-            st.session_state.job_title
+            st.session_state['resume_text'],
+            st.session_state['job_desc'],
+            st.session_state['job_title']
         )
-        st.session_state.current_analysis = res
-        st.session_state.current_page = "📊 AI Job Match Score"
-    st.session_state.run_analysis_requested = False
-
-# Calculate safe default index for sidebar radio widget
-default_nav_index = 0
-if st.session_state.current_page in NAV_OPTIONS:
-    default_nav_index = NAV_OPTIONS.index(st.session_state.current_page)
+        st.session_state['current_analysis'] = res
+        # Update widget session state BEFORE creating the radio widget!
+        st.session_state['app_active_page'] = "📊 AI Job Match Score"
+    st.session_state['analysis_requested'] = False
 
 # Sidebar Brand Header
 st.sidebar.markdown("## ✦ SKILLMATCH AI")
 st.sidebar.caption("Resume Intelligence & Skill Gap Analyzer")
 
-# Sidebar Navigation Control (Created with index, no state conflict)
+# Sidebar Navigation Control (Bound directly to key="app_active_page")
 page = st.sidebar.radio(
     "SELECT PAGE SECTION:",
     NAV_OPTIONS,
-    index=default_nav_index,
-    key="sidebar_nav_radio"
+    key="app_active_page"
 )
 
-# Synchronize current_page with user selection
-st.session_state.current_page = page
-
-# Callbacks for Buttons
+# Button Callbacks
 def trigger_demo_callback():
-    st.session_state.run_demo_requested = True
+    st.session_state["demo_requested"] = True
 
 def trigger_analysis_callback():
-    st.session_state.run_analysis_requested = True
+    st.session_state["analysis_requested"] = True
 
 # ---------------------------------------------------------
 # PAGE 1: DASHBOARD & RESUME ANALYZER
@@ -302,40 +296,41 @@ if page == "🏠 Dashboard & Resume Analyzer":
 
     with in_col1:
         st.subheader("📄 YOUR RESUME")
-        input_type = st.radio("Resume Mode", ["Upload PDF", "Paste Raw Text"], horizontal=True)
+        input_type = st.radio("Resume Mode", ["Upload PDF", "Paste Raw Text"], horizontal=True, key="resume_input_mode_radio")
 
         if input_type == "Upload PDF":
-            uploaded_pdf = st.file_uploader("Upload PDF Resume (Max 5MB)", type=["pdf"])
+            uploaded_pdf = st.file_uploader("Upload PDF Resume (Max 5MB)", type=["pdf"], key="pdf_uploader_widget")
             if uploaded_pdf is not None:
                 pdf_bytes = uploaded_pdf.read()
                 extracted = extract_text_from_pdf_bytes(pdf_bytes)
                 if extracted:
-                    st.session_state.resume_text = extracted
+                    st.session_state['resume_text'] = extracted
                     st.success(f"✓ PDF extracted successfully ({len(extracted)} characters).")
                 else:
                     st.error("Unable to extract text from this PDF. Please try another PDF or paste text.")
         else:
-            st.session_state.resume_text = st.text_area(
+            st.session_state['resume_text'] = st.text_area(
                 "Paste Resume Text",
-                value=st.session_state.resume_text,
+                value=st.session_state['resume_text'],
                 height=250,
-                placeholder="Paste work experience, skills, projects..."
+                placeholder="Paste work experience, skills, projects...",
+                key="resume_text_area_widget"
             )
 
     with in_col2:
         st.subheader("💼 TARGET JOB REQUIREMENT")
-        job_type = st.radio("Job Mode", ["Select Role Template", "Paste Job Description"], horizontal=True)
+        job_type = st.radio("Job Mode", ["Select Role Template", "Paste Job Description"], horizontal=True, key="job_input_mode_radio")
 
         if job_type == "Select Role Template":
             template_options = {t['title']: t for t in JOB_TEMPLATES.values()}
-            selected_name = st.selectbox("Select Target Role Template", list(template_options.keys()))
+            selected_name = st.selectbox("Select Target Role Template", list(template_options.keys()), key="role_template_select_widget")
             selected_t = template_options[selected_name]
-            st.session_state.job_title = selected_t['title']
-            st.session_state.job_desc = selected_t['description']
-            st.text_area("Template Description", value=st.session_state.job_desc, height=200, disabled=True)
+            st.session_state['job_title'] = selected_t['title']
+            st.session_state['job_desc'] = selected_t['description']
+            st.text_area("Template Description", value=st.session_state['job_desc'], height=200, disabled=True, key="template_desc_readonly_widget")
         else:
-            st.session_state.job_title = st.text_input("Job Title", value=st.session_state.job_title)
-            st.session_state.job_desc = st.text_area("Job Description", value=st.session_state.job_desc, height=200)
+            st.session_state['job_title'] = st.text_input("Job Title", value=st.session_state['job_title'], key="job_title_input_widget")
+            st.session_state['job_desc'] = st.text_area("Job Description", value=st.session_state['job_desc'], height=200, key="job_desc_area_widget")
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.button("🚀 ANALYZE RESUME NOW", on_click=trigger_analysis_callback, use_container_width=True)
@@ -346,7 +341,7 @@ if page == "🏠 Dashboard & Resume Analyzer":
 elif page == "📊 AI Job Match Score":
     st.title("📊 AI Job Match Score Results")
     
-    res = st.session_state.current_analysis
+    res = st.session_state['current_analysis']
     if not res:
         st.warning("No analysis available yet. Please go to '🏠 Dashboard & Resume Analyzer' to run an analysis.")
     else:
@@ -449,7 +444,7 @@ elif page == "📊 AI Job Match Score":
 elif page == "🧠 Skill Analysis & Breakdown":
     st.title("🧠 AI Skill Analysis & Categorization")
     
-    res = st.session_state.current_analysis
+    res = st.session_state['current_analysis']
     if not res:
         st.warning("No analysis available. Please run an analysis on the Dashboard.")
     else:
@@ -498,7 +493,7 @@ elif page == "🧠 Skill Analysis & Breakdown":
 elif page == "💡 Explainable AI & Simulator":
     st.title("💡 Explainable AI & Skill Improvement Simulator")
     
-    res = st.session_state.current_analysis
+    res = st.session_state['current_analysis']
     if not res:
         st.warning("No analysis available.")
     else:
@@ -522,7 +517,8 @@ elif page == "💡 Explainable AI & Simulator":
             else:
                 selected_to_acquire = st.multiselect(
                     "Select Skills You Plan to Learn:",
-                    options=available_missing
+                    options=available_missing,
+                    key="what_if_multiselect_widget"
                 )
 
                 sim_result = HybridMatcher.simulate_what_if(selected_to_acquire, res)
@@ -543,7 +539,7 @@ elif page == "💡 Explainable AI & Simulator":
 elif page == "🎯 Skill Priorities & Learning Roadmap":
     st.title("🎯 Skill Priorities & Personalized Roadmap")
     
-    res = st.session_state.current_analysis
+    res = st.session_state['current_analysis']
     if not res:
         st.warning("No analysis available.")
     else:
@@ -570,7 +566,7 @@ elif page == "🎯 Skill Priorities & Learning Roadmap":
 elif page == "📄 Resume Improvement Suggestions":
     st.title("📄 Resume Improvement Suggestions")
     
-    res = st.session_state.current_analysis
+    res = st.session_state['current_analysis']
     if not res:
         st.warning("No analysis available.")
     else:
@@ -595,7 +591,7 @@ elif page == "🔬 AI Model Evaluation":
     st.title("🔬 AI Model Evaluation Framework")
     st.caption("Empirical runtime latency metrics and evaluation guidelines.")
 
-    res = st.session_state.current_analysis
+    res = st.session_state['current_analysis']
     latency = res['latency_seconds'] if res else 0.31
 
     m1, m2, m3 = st.columns(3)
