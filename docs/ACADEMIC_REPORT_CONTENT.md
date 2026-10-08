@@ -1,7 +1,7 @@
 # ACADEMIC TECHNICAL REPORT: SKILLMATCH AI
 
 **PROJECT TITLE:** SKILLMATCH AI — Resume Intelligence & Skill Gap Analyzer  
-**AUTHOR:** Megana V.  
+**AUTHOR:** SKILLMATCH AI Project Team  
 **DOMAIN:** Artificial Intelligence, Natural Language Processing, Machine Learning  
 
 ---

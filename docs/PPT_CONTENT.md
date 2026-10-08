@@ -5,7 +5,7 @@
 ### Slide 1: Title Slide
 - **Title:** SKILLMATCH AI: Resume Intelligence & Skill Gap Analyzer
 - **Subtitle:** Discover your resume's true skill gap with Hybrid NLP & Transformer Vectors.
-- **Presenter:** Megana V. | B.Tech Artificial Intelligence & Machine Learning
+- **Presenter:** SKILLMATCH AI Project Team | B.Tech Artificial Intelligence & Machine Learning
 
 ---
 

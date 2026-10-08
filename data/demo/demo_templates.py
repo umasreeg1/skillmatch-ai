@@ -3,9 +3,9 @@ Predefined Job Description Templates & Demo Data for SKILLMATCH AI
 """
 
 DEMO_RESUME_TEXT = """
-MEGANA V.
+ALEX R.
 AI & Machine Learning Software Engineer
-Email: megana@example.com | GitHub: github.com/megana-ai | LinkedIn: linkedin.com/in/megana
+Email: alex@example.com | GitHub: github.com/alex-ai | LinkedIn: linkedin.com/in/alex-ai
 
 PROFESSIONAL SUMMARY:
 Results-driven AI/ML Engineer with strong foundation in Python, Machine Learning, Data Structures, and SQL. Experienced in developing predictive machine learning models using Scikit-learn, data analysis with Pandas and NumPy, and version control with Git & GitHub. Passionate about artificial intelligence, model optimization, and scalable backend services.

@@ -110,4 +110,4 @@ python -m pytest tests/test_backend.py
 ## 📜 License & Academic Evaluation
 
 Developed for B.Tech / M.Tech AI & Machine Learning capstone evaluation.  
-Author: Megana V. | SKILLMATCH AI Project Team.
+Author: SKILLMATCH AI Project Team.

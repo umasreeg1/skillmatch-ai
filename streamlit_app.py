@@ -22,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Injected Custom Dark SaaS CSS matching the primary visual reference screenshot
+# Custom Dark SaaS CSS matching the primary visual reference screenshot
 CSS = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
@@ -114,6 +114,7 @@ CSS = """
         padding: 20px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         margin-bottom: 16px;
+        height: 100%;
     }
     
     /* Feature Badges */
@@ -159,14 +160,26 @@ CSS = """
         letter-spacing: 0.5px;
     }
     
-    /* Pill Badges matching screenshot */
+    /* Formula Box */
+    .formula-box {
+        background: rgba(0, 242, 254, 0.03);
+        border: 1px solid rgba(0, 242, 254, 0.2);
+        border-radius: 12px;
+        padding: 16px 20px;
+        font-size: 0.88rem;
+        color: #cbd5e1;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+    
+    /* Pill Badges */
     .pill-badge {
         display: inline-block;
-        padding: 5px 12px;
-        border-radius: 16px;
-        font-size: 0.8rem;
+        padding: 4px 10px;
+        border-radius: 14px;
+        font-size: 0.78rem;
         font-weight: 600;
-        margin: 3px;
+        margin: 3px 2px;
     }
     
     .pill-strong {
@@ -191,6 +204,16 @@ CSS = """
         background: rgba(59, 130, 246, 0.15);
         color: #3b82f6;
         border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Compact Chips Container for Additional Skills */
+    .chips-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        max-height: 180px;
+        overflow-y: auto;
+        padding: 4px;
     }
     
     /* Custom Buttons */
@@ -236,14 +259,13 @@ st.markdown(CSS, unsafe_allow_html=True)
 # Navigation Pages List
 NAV_PAGES = [
     "🏠 Home / Dashboard",
-    "📊 AI Job Match",
-    "🧠 Skill Analysis",
-    "💡 Explainable AI & Simulator",
+    "📊 AI Job Match Score",
     "🎯 Skill Priorities & Roadmap",
-    "📄 Resume Improvement",
-    "🔬 Model Evaluation",
-    "📚 Methodology",
-    "ℹ About"
+    "💡 Explainable AI & Simulator",
+    "📄 Resume Improvement Suggestions",
+    "🔬 AI Model Evaluation",
+    "📚 Methodology & Viva Guide",
+    "ℹ About SKILLMATCH AI"
 ]
 
 # ---------------------------------------------------------
@@ -282,7 +304,7 @@ if st.session_state.get("demo_requested"):
         st.session_state['job_title']
     )
     st.session_state['current_analysis'] = res
-    st.session_state['app_active_page'] = "📊 AI Job Match"
+    st.session_state['app_active_page'] = "📊 AI Job Match Score"
     st.session_state['demo_requested'] = False
 
 if st.session_state.get("analysis_requested"):
@@ -293,7 +315,7 @@ if st.session_state.get("analysis_requested"):
             st.session_state['job_title']
         )
         st.session_state['current_analysis'] = res
-        st.session_state['app_active_page'] = "📊 AI Job Match"
+        st.session_state['app_active_page'] = "📊 AI Job Match Score"
     st.session_state['analysis_requested'] = False
 
 # Sidebar Brand Header
@@ -327,7 +349,7 @@ st.markdown("""
         <span style="font-size:0.8rem; background:rgba(0,242,254,0.1); color:#00f2fe; padding:4px 10px; border-radius:12px; border:1px solid rgba(0,242,254,0.3);">
             384-D Vector Engine Active
         </span>
-        <span style="font-weight:700; font-size:0.85rem; color:#f1f5f9;">M Megana</span>
+        <span style="font-weight:700; font-size:0.85rem; color:#f1f5f9;">👤 CANDIDATE PROFILE</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -339,19 +361,19 @@ if page == "🏠 Home / Dashboard":
     st.markdown("""
     <div class="hero-banner">
         <div class="hero-title">Discover Your Resume's True <span class="gradient-highlight">Skill Gap</span></div>
-        <div class="hero-subtitle">AI-powered resume analysis to match your skills with job requirements and get personalized recommendations.</div>
+        <div class="hero-subtitle">AI-powered resume intelligence to match your skills with job requirements and get personalized career roadmaps.</div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Feature indicators matching screenshot
+    # Feature indicators matching visual reference
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.markdown("""
         <div class="feature-card">
-            <div class="feature-icon" style="background:rgba(16,185,129,0.15); color:#10b981;">⚡</div>
+            <div class="feature-icon" style="background:rgba(0,242,254,0.15); color:#00f2fe;">⚡</div>
             <div>
-                <div style="font-weight:700; font-size:0.85rem;">Accurate Skill Matching</div>
-                <div style="font-size:0.72rem; color:#64748b;">NLP + Semantic AI</div>
+                <div style="font-weight:700; font-size:0.85rem;">384-D Vector Engine</div>
+                <div style="font-size:0.72rem; color:#64748b;">SentenceTransformer NLP</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -360,73 +382,72 @@ if page == "🏠 Home / Dashboard":
         <div class="feature-card">
             <div class="feature-icon" style="background:rgba(155,81,224,0.15); color:#9b51e0;">📊</div>
             <div>
-                <div style="font-weight:700; font-size:0.85rem;">Detailed Gap Analysis</div>
-                <div style="font-size:0.72rem; color:#64748b;">Identify missing skills</div>
+                <div style="font-weight:700; font-size:0.85rem;">Formula Transparency</div>
+                <div style="font-size:0.72rem; color:#64748b;">Explicit Match Weights</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown("""
         <div class="feature-card">
-            <div class="feature-icon" style="background:rgba(245,158,11,0.15); color:#f59e0b;">💡</div>
+            <div class="feature-icon" style="background:rgba(16,185,129,0.15); color:#10b981;">💡</div>
             <div>
-                <div style="font-weight:700; font-size:0.85rem;">Personalized Roadmap</div>
-                <div style="font-size:0.72rem; color:#64748b;">Learn the right skills</div>
+                <div style="font-weight:700; font-size:0.85rem;">What-If Simulator</div>
+                <div style="font-size:0.72rem; color:#64748b;">Dynamic Boost Projection</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
     with col4:
         st.markdown("""
         <div class="feature-card">
-            <div class="feature-icon" style="background:rgba(59,130,246,0.15); color:#3b82f6;">💼</div>
+            <div class="feature-icon" style="background:rgba(245,158,11,0.15); color:#f59e0b;">🚀</div>
             <div>
-                <div style="font-weight:700; font-size:0.85rem;">Boost Career Opportunities</div>
-                <div style="font-size:0.72rem; color:#64748b;">Be job-ready</div>
+                <div style="font-weight:700; font-size:0.85rem;">4–8 Week Roadmap</div>
+                <div style="font-size:0.72rem; color:#64748b;">Targeted Skill Growth</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # 3-Column Input Grid matching reference screenshot
-    in_col1, in_col2, in_col3 = st.columns([1, 1, 0.8])
+    # Input Section Cards
+    in_col1, in_col2, in_col3 = st.columns([1.2, 1.2, 0.8])
 
     with in_col1:
-        st.subheader("1. Your Resume")
-        st.caption("Upload your resume (PDF) or paste your resume text")
-        input_type = st.radio("Resume Input Mode", ["Upload PDF", "Paste Text"], horizontal=True, key="home_resume_mode")
+        st.subheader("1. Resume Input")
+        uploaded_file = st.file_uploader("Upload Resume (PDF)", type=["pdf"])
+        if uploaded_file is not None:
+            pdf_bytes = uploaded_file.read()
+            extracted_text = extract_text_from_pdf_bytes(pdf_bytes)
+            st.session_state['resume_text'] = extracted_text
+            st.success(f"Extracted {len(extracted_text.split())} words from PDF!")
 
-        if input_type == "Upload PDF":
-            uploaded_pdf = st.file_uploader("Upload PDF Resume (Max 5MB)", type=["pdf"], key="home_pdf_uploader")
-            if uploaded_pdf is not None:
-                pdf_bytes = uploaded_pdf.read()
-                extracted = extract_text_from_pdf_bytes(pdf_bytes)
-                if extracted:
-                    st.session_state['resume_text'] = extracted
-                    st.success(f"✓ {uploaded_pdf.name} ({(uploaded_pdf.size / 1024 / 1024):.1f} MB) • Ready to analyze")
-                else:
-                    st.error("Unable to extract text from this PDF. Please try another PDF or paste text.")
-        else:
-            st.session_state['resume_text'] = st.text_area(
-                "Paste Resume Text",
-                value=st.session_state['resume_text'],
-                height=220,
-                placeholder="Paste work experience, skills, projects...",
-                key="home_resume_textarea"
-            )
+        st.markdown("**OR Paste Resume Text:**")
+        pasted_text = st.text_area(
+            "Resume Plain Text",
+            value=st.session_state['resume_text'],
+            height=160,
+            placeholder="Paste candidate resume content here...",
+            key="home_resume_text_area"
+        )
+        if pasted_text != st.session_state['resume_text']:
+            st.session_state['resume_text'] = pasted_text
 
     with in_col2:
-        st.subheader("2. Target Job Requirement")
-        st.caption("Enter the job description or select a template")
-        job_type = st.radio("Job Input Mode", ["Paste Job Description", "Use Template"], horizontal=True, key="home_job_mode")
+        st.subheader("2. Target Job Description")
+        template_keys = list(JOB_TEMPLATES.keys())
+        selected_template = st.selectbox(
+            "Choose Target Role Template:",
+            options=["Custom Description"] + [JOB_TEMPLATES[k]['title'] for k in template_keys],
+            key="home_template_selectbox"
+        )
 
-        if job_type == "Use Template":
-            template_options = {t['title']: t for t in JOB_TEMPLATES.values()}
-            selected_name = st.selectbox("Select Target Role Template", list(template_options.keys()), key="home_role_select")
-            selected_t = template_options[selected_name]
-            st.session_state['job_title'] = selected_t['title']
-            st.session_state['job_desc'] = selected_t['description']
-            st.text_area("Template Requirements", value=st.session_state['job_desc'], height=180, disabled=True, key="home_template_preview")
+        if selected_template != "Custom Description":
+            matched_key = [k for k in template_keys if JOB_TEMPLATES[k]['title'] == selected_template][0]
+            st.session_state['job_title'] = JOB_TEMPLATES[matched_key]['title']
+            st.session_state['job_desc'] = JOB_TEMPLATES[matched_key]['description']
+            st.info(f"Loaded **{st.session_state['job_title']}** requirement template.")
+            st.text_area("Job Description Preview", value=st.session_state['job_desc'], height=180, disabled=True)
         else:
             st.session_state['job_title'] = st.text_input("Job Title", value=st.session_state['job_title'], key="home_job_title_input")
             st.session_state['job_desc'] = st.text_area("Job Description", value=st.session_state['job_desc'], height=180, key="home_job_desc_textarea")
@@ -436,7 +457,7 @@ if page == "🏠 Home / Dashboard":
         st.markdown("""
         <div style="background:#101728; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px; margin-bottom:16px;">
             <div style="font-weight:700; font-size:0.9rem; color:#00f2fe; margin-bottom:4px;">✨ Try Demo</div>
-            <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:12px;">Load sample resume & job description</div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:12px;">Instant sample resume & Junior AI/ML job match analysis</div>
         </div>
         """, unsafe_allow_html=True)
         st.button("✨ TRY DEMO", on_click=trigger_demo_callback, use_container_width=True)
@@ -445,9 +466,9 @@ if page == "🏠 Home / Dashboard":
         st.button("✨ Analyze Resume →", on_click=trigger_analysis_callback, use_container_width=True)
 
 # ---------------------------------------------------------
-# PAGE 2: 📊 AI JOB MATCH SCORE (MATCHING ATTACHED SCREENSHOT)
+# PAGE 2: 📊 AI JOB MATCH SCORE
 # ---------------------------------------------------------
-elif page == "📊 AI Job Match":
+elif page == "📊 AI Job Match Score":
     st.title("📊 AI Job Match Score Results")
     
     res = st.session_state['current_analysis']
@@ -456,7 +477,7 @@ elif page == "📊 AI Job Match":
     else:
         st.caption(f"Target Role: **{res['job_title']}** | Evaluated in {res['latency_seconds']}s")
 
-        # Top Row 3 Primary Cards matching reference image layout
+        # Top Row 3 Primary Cards matching visual reference layout
         top_c1, top_c2, top_c3 = st.columns([1.1, 1.1, 1.2])
 
         # CARD 1: AI JOB MATCH SCORE & GAUGE
@@ -527,33 +548,81 @@ elif page == "📊 AI Job Match":
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # Bottom Row 4 Grid Cards matching reference image
-        b_col1, b_col2, b_col3, b_col4 = st.columns([1, 1, 1.2, 1.2])
+        # Bottom Row 4 Grid Cards matching reference image layout
+        b_col1, b_col2, b_col3, b_col4 = st.columns([1, 1.1, 1.2, 1.1])
 
+        # 1. MISSING SKILLS CARD
         with b_col1:
             st.markdown("### 🎯 MISSING SKILLS")
-            for m in res['missing_skills']:
-                st.progress(m['similarity'] / 100.0, text=f"**{m['skill']}** ({m['similarity']}%)")
+            if not res['missing_skills']:
+                st.markdown("<div style='color:#10b981; font-weight:700;'>✓ No missing skills detected!</div>", unsafe_allow_html=True)
+            else:
+                for m in res['missing_skills']:
+                    st.progress(m['similarity'] / 100.0, text=f"**{m['skill']}** ({m['similarity']}%)")
 
+        # 2. ADDITIONAL SKILLS CARD (COMPACT CHIPS WRAPPING)
         with b_col2:
             st.markdown("### ⭐ ADDITIONAL SKILLS")
-            for a in res['additional_skills']:
-                st.markdown(f"<span class='pill-badge pill-additional'>{a['skill']}</span>", unsafe_allow_html=True)
+            add_skills = res['additional_skills']
+            if not add_skills:
+                st.caption("No extra skills detected.")
+            else:
+                display_skills = add_skills[:10]
+                chips_html = "".join([f"<span class='pill-badge pill-additional'>{a['skill']}</span>" for a in display_skills])
+                st.markdown(f"<div class='chips-container'>{chips_html}</div>", unsafe_allow_html=True)
+                if len(add_skills) > 10:
+                    with st.expander(f"+ {len(add_skills) - 10} more skills"):
+                        more_chips = "".join([f"<span class='pill-badge pill-additional'>{a['skill']}</span>" for a in add_skills[10:]])
+                        st.markdown(more_chips, unsafe_allow_html=True)
 
+        # 3. WHAT-IF SIMULATOR CARD
         with b_col3:
             st.markdown("### ⚡ WHAT-IF SIMULATOR")
-            st.caption("Select skills to see potential match score:")
+            st.caption("Select skills to project potential score:")
             available_missing = [m['skill'] for m in res['missing_skills']] + [p['skill'] for p in res['partial_matches']]
             if available_missing:
                 selected_to_acquire = st.multiselect("Acquire Skills:", options=available_missing, key="results_whatif_multiselect")
                 sim_res = HybridMatcher.simulate_what_if(selected_to_acquire, res)
                 st.markdown(f"**Current:** {res['overall_score']}% ➔ **Projected:** <span style='color:#10b981; font-weight:800;'>{sim_res['projected_score']}% (+{sim_res['estimated_boost']}%)</span>", unsafe_allow_html=True)
+            else:
+                st.success("All required skills already matched!")
 
+        # 4. LEARNING ROADMAP CARD
         with b_col4:
             st.markdown("### 🚀 LEARNING ROADMAP")
-            for week in res['roadmap'][:3]:
-                st.markdown(f"**{week['week_range']}:** {week['title']}")
-                st.caption(week['goal'])
+            if res['roadmap']:
+                for week in res['roadmap'][:2]:
+                    st.markdown(f"**{week['week_range']}:** {week['title']}")
+                    st.caption(f"Target: {', '.join(week['skills'][:2])}")
+            else:
+                st.caption("Roadmap up to date.")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # 2nd Results Row: SKILL COVERAGE ANALYSIS & KEY INSIGHTS
+        sec_col1, sec_col2 = st.columns([1.2, 1])
+
+        with sec_col1:
+            st.markdown("### 📈 SKILL COVERAGE ANALYSIS")
+            cat_df = pd.DataFrame(res['category_summary'])
+            if not cat_df.empty:
+                fig_cat = px.bar(
+                    cat_df,
+                    x='category',
+                    y='match_percentage',
+                    color='match_percentage',
+                    color_continuous_scale=['#ef4444', '#f59e0b', '#10b981'],
+                    labels={'match_percentage': 'Match %', 'category': 'Domain Category'},
+                    range_y=[0, 100]
+                )
+                fig_cat.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#94a3b8', height=240, margin=dict(l=10,r=10,t=20,b=10))
+                st.plotly_chart(fig_cat, use_container_width=True)
+
+        with sec_col2:
+            st.markdown("### 💡 KEY INSIGHTS")
+            for insight in res['explainable_insights'][:3]:
+                st.markdown(f"**{insight['title']}** (`{insight['badge']}`)")
+                st.caption(insight['description'])
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -564,7 +633,7 @@ elif page == "📊 AI Job Match":
             • <b>35% Document Semantic Similarity:</b> {res['document_similarity']}%<br>
             • <b>45% Direct Skill Coverage:</b> {res['direct_skill_coverage']}%<br>
             • <b>20% Partial Concept Coverage:</b> {res['partial_concept_coverage']}%<br>
-            <hr style="border-color:rgba(255,255,255,0.1);">
+            <hr style="border-color:rgba(255,255,255,0.1); margin:8px 0;">
             <b>Formula Total:</b> {res['score_calculation']['document_similarity_weighted']}% + {res['score_calculation']['direct_coverage_weighted']}% + {res['score_calculation']['partial_coverage_weighted']}% = <span style="color:#00f2fe; font-weight:800;">{res['overall_score']}%</span>
         </div>
         """, unsafe_allow_html=True)
@@ -579,53 +648,34 @@ elif page == "📊 AI Job Match":
         st.markdown(p_pills if p_pills else "*No partial matches*", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# PAGE 3: 🧠 SKILL ANALYSIS
+# PAGE 3: 🎯 SKILL PRIORITIES & ROADMAP
 # ---------------------------------------------------------
-elif page == "🧠 Skill Analysis":
-    st.title("🧠 AI Skill Analysis & Categorization")
+elif page == "🎯 Skill Priorities & Roadmap":
+    st.title("🎯 Skill Priorities & Personalized Roadmap")
     
     res = st.session_state['current_analysis']
     if not res:
-        st.warning("No analysis available. Please run an analysis on the Dashboard or click '✨ TRY DEMO'.")
+        st.warning("No analysis available yet. Please go to '🏠 Home / Dashboard' or click '✨ TRY DEMO'.")
     else:
-        c1, c2 = st.columns(2)
+        r_col1, r_col2 = st.columns([1, 2])
 
-        with c1:
-            st.subheader("Domain Category Visualization")
-            cat_df = pd.DataFrame(res['category_summary'])
-            if not cat_df.empty:
-                fig_bar = px.bar(
-                    cat_df,
-                    x='category',
-                    y='match_percentage',
-                    color='match_percentage',
-                    color_continuous_scale=['#ef4444', '#f59e0b', '#10b981'],
-                    labels={'match_percentage': 'Match %', 'category': 'Domain'},
-                    range_y=[0, 100]
-                )
-                fig_bar.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#94a3b8')
-                st.plotly_chart(fig_bar, use_container_width=True)
+        with r_col1:
+            st.subheader("Priority Classification")
+            if not res['missing_skills']:
+                st.success("No missing skills to prioritize!")
+            else:
+                for m in res['missing_skills']:
+                    color_code = "🔴" if m['priority'] == "HIGH" else "🟠"
+                    st.markdown(f"{color_code} **{m['skill']}** — `{m['priority']} PRIORITY` ({m['category']})")
 
-        with c2:
-            st.subheader("Skill Status Breakdown")
-            donut_data = {
-                'Status': ['Matching', 'Partial', 'Missing', 'Additional'],
-                'Count': [res['matching_count'], res['partial_count'], res['missing_count'], res['additional_count']]
-            }
-            fig_pie = px.pie(
-                donut_data,
-                names='Status',
-                values='Count',
-                hole=0.5,
-                color='Status',
-                color_discrete_map={'Matching': '#10b981', 'Partial': '#f59e0b', 'Missing': '#ef4444', 'Additional': '#3b82f6'}
-            )
-            fig_pie.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#94a3b8')
-            st.plotly_chart(fig_pie, use_container_width=True)
-
-        st.markdown("### Top Ranked Matching Skills")
-        for s in res['top_matching_skills']:
-            st.progress(s['similarity'] / 100.0, text=f"**{s['skill']}** ({s['similarity']}%) — {s['category']}")
+        with r_col2:
+            st.subheader("Personalized 4-8 Week Roadmap")
+            for week in res['roadmap']:
+                with st.expander(f"🚀 {week['week_range']}: {week['title']}", expanded=True):
+                    st.write(f"**Target Skills:** {', '.join(week['skills'])}")
+                    st.write(f"**Goal:** {week['goal']}")
+                    st.write(f"**Focus:** {week['focus']}")
+                    st.info(f"💡 **Practice:** {week['practice_recommendation']}")
 
 # ---------------------------------------------------------
 # PAGE 4: 💡 EXPLAINABLE AI & SIMULATOR
@@ -635,7 +685,7 @@ elif page == "💡 Explainable AI & Simulator":
     
     res = st.session_state['current_analysis']
     if not res:
-        st.warning("No analysis available.")
+        st.warning("No analysis available. Please run an analysis on the Dashboard or click '✨ TRY DEMO'.")
     else:
         tab_exp, tab_sim = st.tabs(["💡 Explainable AI Reasoning", "⚡ What-If Skill Simulator"])
 
@@ -643,7 +693,7 @@ elif page == "💡 Explainable AI & Simulator":
             st.info("### AI Vector Embedding Architecture\n\nResume text and job requirements were mapped into 384-dimensional dense semantic vectors using `SentenceTransformer (all-MiniLM-L6-v2)` and compared via Cosine Distance.")
 
             for insight in res['explainable_insights']:
-                with st.expander(f"📌 {insight['title']} ({insight['badge']})"):
+                with st.expander(f"📌 {insight['title']} ({insight['badge']})", expanded=True):
                     st.write(insight['description'])
 
         with tab_sim:
@@ -674,41 +724,14 @@ elif page == "💡 Explainable AI & Simulator":
                 st.caption(f"📌 *{sim_result['disclaimer']}*")
 
 # ---------------------------------------------------------
-# PAGE 5: 🎯 SKILL PRIORITIES & ROADMAP
+# PAGE 5: 📄 RESUME IMPROVEMENT SUGGESTIONS
 # ---------------------------------------------------------
-elif page == "🎯 Skill Priorities & Roadmap":
-    st.title("🎯 Skill Priorities & Personalized Roadmap")
-    
-    res = st.session_state['current_analysis']
-    if not res:
-        st.warning("No analysis available.")
-    else:
-        r_col1, r_col2 = st.columns([1, 2])
-
-        with r_col1:
-            st.subheader("Priority Classification")
-            for m in res['missing_skills']:
-                color_code = "🔴" if m['priority'] == "HIGH" else "🟠"
-                st.markdown(f"{color_code} **{m['skill']}** — `{m['priority']} PRIORITY` ({m['category']})")
-
-        with r_col2:
-            st.subheader("Personalized 4-8 Week Roadmap")
-            for week in res['roadmap']:
-                with st.expander(f"🚀 {week['week_range']}: {week['title']}"):
-                    st.write(f"**Target Skills:** {', '.join(week['skills'])}")
-                    st.write(f"**Goal:** {week['goal']}")
-                    st.write(f"**Focus:** {week['focus']}")
-                    st.info(f"💡 **Practice:** {week['practice_recommendation']}")
-
-# ---------------------------------------------------------
-# PAGE 6: 📄 RESUME IMPROVEMENT
-# ---------------------------------------------------------
-elif page == "📄 Resume Improvement":
+elif page == "📄 Resume Improvement Suggestions":
     st.title("📄 Resume Improvement Suggestions")
     
     res = st.session_state['current_analysis']
     if not res:
-        st.warning("No analysis available.")
+        st.warning("No analysis available. Please run an analysis on the Dashboard or click '✨ TRY DEMO'.")
     else:
         cq = res['content_quality']
         st.markdown(f"""
@@ -725,9 +748,9 @@ elif page == "📄 Resume Improvement":
             st.markdown("---")
 
 # ---------------------------------------------------------
-# PAGE 7: 🔬 MODEL EVALUATION
+# PAGE 6: 🔬 AI MODEL EVALUATION
 # ---------------------------------------------------------
-elif page == "🔬 Model Evaluation":
+elif page == "🔬 AI Model Evaluation":
     st.title("🔬 AI Model Evaluation Framework")
     st.caption("Empirical runtime latency metrics and evaluation guidelines.")
 
@@ -752,9 +775,9 @@ elif page == "🔬 Model Evaluation":
     """)
 
 # ---------------------------------------------------------
-# PAGE 8: 📚 METHODOLOGY
+# PAGE 7: 📚 METHODOLOGY & VIVA GUIDE
 # ---------------------------------------------------------
-elif page == "📚 Methodology":
+elif page == "📚 Methodology & Viva Guide":
     st.title("📚 AI Methodology & Technical Viva Guide")
     st.markdown("""
     ### 1. Primary Semantic Model
@@ -774,14 +797,14 @@ elif page == "📚 Methodology":
     """)
 
 # ---------------------------------------------------------
-# PAGE 9: ℹ ABOUT
+# PAGE 8: ℹ ABOUT SKILLMATCH AI
 # ---------------------------------------------------------
-elif page == "ℹ About":
+elif page == "ℹ About SKILLMATCH AI":
     st.title("ℹ About SKILLMATCH AI")
     st.markdown("""
     **SKILLMATCH AI** is an AI/ML Resume Intelligence application designed for B.Tech / M.Tech academic evaluation and career intelligence.
     
     - **Frontend:** Streamlit + Custom Dark SaaS CSS + Plotly
     - **Backend Engine:** Python + SentenceTransformers + PyMuPDF + Scikit-Learn
-    - **Author:** Megana V.
+    - **Author:** SKILLMATCH AI Project Team
     """)
