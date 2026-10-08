@@ -173,26 +173,6 @@ CSS = """
 """
 st.markdown(CSS, unsafe_allow_html=True)
 
-# Pre-load & cache SentenceTransformer model
-@st.cache_resource
-def cached_transformer_model():
-    return get_transformer_model()
-
-# Warmup model
-cached_transformer_model()
-
-# Session State Initialization
-if 'current_analysis' not in st.session_state:
-    st.session_state.current_analysis = None
-if 'resume_text' not in st.session_state:
-    st.session_state.resume_text = ""
-if 'job_desc' not in st.session_state:
-    st.session_state.job_desc = JOB_TEMPLATES['junior_aiml']['description']
-if 'job_title' not in st.session_state:
-    st.session_state.job_title = JOB_TEMPLATES['junior_aiml']['title']
-if 'nav_page' not in st.session_state:
-    st.session_state.nav_page = "🏠 Dashboard & Resume Analyzer"
-
 # Navigation Options List
 NAV_OPTIONS = [
     "🏠 Dashboard & Resume Analyzer",
@@ -206,16 +186,51 @@ NAV_OPTIONS = [
     "ℹ About System"
 ]
 
+# Session State Initialization (MUST OCCUR BEFORE CREATING ANY WIDGET)
+if 'current_analysis' not in st.session_state:
+    st.session_state.current_analysis = None
+if 'resume_text' not in st.session_state:
+    st.session_state.resume_text = ""
+if 'job_desc' not in st.session_state:
+    st.session_state.job_desc = JOB_TEMPLATES['junior_aiml']['description']
+if 'job_title' not in st.session_state:
+    st.session_state.job_title = JOB_TEMPLATES['junior_aiml']['title']
+
+# Handle Pending Navigation Redirect BEFORE Widget Creation
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = "🏠 Dashboard & Resume Analyzer"
+
+if 'pending_redirect' in st.session_state and st.session_state.pending_redirect:
+    st.session_state.current_page = st.session_state.pending_redirect
+    del st.session_state.pending_redirect
+
+# Determine index for sidebar radio widget
+default_nav_index = 0
+if st.session_state.current_page in NAV_OPTIONS:
+    default_nav_index = NAV_OPTIONS.index(st.session_state.current_page)
+
+# Pre-load & cache SentenceTransformer model
+@st.cache_resource
+def cached_transformer_model():
+    return get_transformer_model()
+
+# Warmup model
+cached_transformer_model()
+
 # Sidebar Brand Header
 st.sidebar.markdown("## ✦ SKILLMATCH AI")
 st.sidebar.caption("Resume Intelligence & Skill Gap Analyzer")
 
-# Sidebar Navigation Control using session_state key
+# Sidebar Navigation Widget (Created safely using index)
 page = st.sidebar.radio(
     "SELECT PAGE SECTION:",
     NAV_OPTIONS,
-    key="nav_page"
+    index=default_nav_index,
+    key="sidebar_radio_widget_select"
 )
+
+# Synchronize current_page with user selection
+st.session_state.current_page = page
 
 # Helper Function to Run Analysis Pipeline
 def run_analysis_pipeline(resume_txt, job_txt, j_title):
@@ -259,7 +274,8 @@ if page == "🏠 Dashboard & Resume Analyzer":
             st.session_state.job_desc = JOB_TEMPLATES['junior_aiml']['description']
             st.session_state.job_title = JOB_TEMPLATES['junior_aiml']['title']
             run_analysis_pipeline(DEMO_RESUME_TEXT, st.session_state.job_desc, st.session_state.job_title)
-            st.session_state.nav_page = "📊 AI Job Match Score"
+            # Safe redirect without modifying instantiated widget keys
+            st.session_state.pending_redirect = "📊 AI Job Match Score"
             st.rerun()
 
     st.markdown("---")
@@ -312,7 +328,8 @@ if page == "🏠 Dashboard & Resume Analyzer":
             st.error("Please select a job template or paste a target job description.")
         else:
             run_analysis_pipeline(st.session_state.resume_text, st.session_state.job_desc, st.session_state.job_title)
-            st.session_state.nav_page = "📊 AI Job Match Score"
+            # Safe redirect without modifying instantiated widget keys
+            st.session_state.pending_redirect = "📊 AI Job Match Score"
             st.rerun()
 
 # ---------------------------------------------------------
