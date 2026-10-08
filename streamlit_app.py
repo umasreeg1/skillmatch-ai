@@ -22,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Injected Custom Dark SaaS CSS
+# Injected Custom Dark SaaS CSS matching the primary visual reference screenshot
 CSS = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
@@ -32,7 +32,7 @@ CSS = """
     }
     
     .stApp {
-        background-color: #0b0f19;
+        background-color: #080c14;
         color: #f1f5f9;
     }
     
@@ -41,68 +41,132 @@ CSS = """
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Header Gradient Banner */
-    .brand-header {
-        background: linear-gradient(135deg, rgba(0, 242, 254, 0.1) 0%, rgba(155, 81, 224, 0.1) 100%);
-        border: 1px solid rgba(79, 172, 254, 0.25);
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 25px;
-        text-align: center;
-        backdrop-filter: blur(10px);
+    /* Persistent Top Header Bar */
+    .top-header-bar {
+        background: #0f172a;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        border-radius: 12px;
     }
     
-    .gradient-title {
-        font-size: 2.4rem;
+    .top-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .top-brand-title {
+        font-size: 1.35rem;
         font-weight: 800;
+        letter-spacing: -0.5px;
+        color: #ffffff;
+    }
+    
+    .top-brand-title span {
+        background: linear-gradient(135deg, #00f2fe 0%, #9b51e0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .top-brand-sub {
+        font-size: 0.72rem;
+        color: #64748b;
+    }
+    
+    /* Hero Banner */
+    .hero-banner {
+        text-align: center;
+        padding: 15px 0 25px 0;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.8px;
+        line-height: 1.2;
+        margin-bottom: 8px;
+        color: #ffffff;
+    }
+    
+    .gradient-highlight {
         background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #9b51e0 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 6px;
     }
     
-    .subtitle {
-        font-size: 1rem;
+    .hero-subtitle {
+        font-size: 0.98rem;
         color: #94a3b8;
+        margin-bottom: 20px;
     }
     
-    /* Metric Cards */
-    .metric-card {
-        background: #141c2e;
+    /* Dark Glass Cards */
+    .saas-card {
+        background: #101728;
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 14px;
         padding: 20px;
-        text-align: center;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        transition: transform 0.2s ease;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        margin-bottom: 16px;
     }
     
-    .metric-card:hover {
-        transform: translateY(-2px);
-        border-color: rgba(0, 242, 254, 0.3);
+    /* Feature Badges */
+    .feature-card {
+        background: #101728;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
     
-    .metric-value {
-        font-size: 2rem;
+    .feature-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-weight: 800;
-        margin: 6px 0;
     }
     
-    .metric-label {
-        font-size: 0.78rem;
+    /* Metric Card */
+    .metric-card {
+        background: #101728;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 18px;
+        text-align: center;
+    }
+    
+    .metric-val {
+        font-size: 2.1rem;
+        font-weight: 800;
+        margin: 4px 0;
+    }
+    
+    .metric-lbl {
+        font-size: 0.75rem;
         color: #94a3b8;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     
-    /* Pill Badges */
+    /* Pill Badges matching screenshot */
     .pill-badge {
         display: inline-block;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.82rem;
+        padding: 5px 12px;
+        border-radius: 16px;
+        font-size: 0.8rem;
         font-weight: 600;
-        margin: 4px;
+        margin: 3px;
     }
     
     .pill-strong {
@@ -129,68 +193,64 @@ CSS = """
         border: 1px solid rgba(59, 130, 246, 0.3);
     }
     
-    /* Formula Box */
-    .formula-box {
-        background: rgba(14, 20, 34, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 12px;
-        padding: 16px;
-        font-family: monospace;
-        font-size: 0.85rem;
-        margin: 12px 0;
-    }
-
     /* Custom Buttons */
     .stButton>button {
-        background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-        color: #0b0f19 !important;
-        font-weight: 700 !important;
+        background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #9b51e0 100%) !important;
+        color: #080c14 !important;
+        font-weight: 800 !important;
         border: none !important;
         border-radius: 10px !important;
         padding: 10px 24px !important;
         transition: all 0.2s ease !important;
+        box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3) !important;
     }
     
     .stButton>button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4) !important;
+        box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5) !important;
     }
-
-    /* Sidebar Custom Radio Buttons */
+    
+    /* Sidebar Styling */
+    div[data-testid="stSidebar"] {
+        background-color: #0a0e18;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
     div[data-testid="stSidebar"] div[role="radiogroup"] > label {
         background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 8px;
         padding: 8px 12px;
-        margin-bottom: 6px;
+        margin-bottom: 5px;
         transition: all 0.2s ease;
     }
+    
     div[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-        background: rgba(0, 242, 254, 0.1);
+        background: rgba(0, 242, 254, 0.12);
         border-color: rgba(0, 242, 254, 0.3);
     }
 </style>
 """
 st.markdown(CSS, unsafe_allow_html=True)
 
-# Navigation Options List
-NAV_OPTIONS = [
-    "🏠 Dashboard & Resume Analyzer",
-    "📊 AI Job Match Score",
-    "🧠 Skill Analysis & Breakdown",
+# Navigation Pages List
+NAV_PAGES = [
+    "🏠 Home / Dashboard",
+    "📊 AI Job Match",
+    "🧠 Skill Analysis",
     "💡 Explainable AI & Simulator",
-    "🎯 Skill Priorities & Learning Roadmap",
-    "📄 Resume Improvement Suggestions",
-    "🔬 AI Model Evaluation",
-    "📚 Methodology & Viva Guide",
-    "ℹ About System"
+    "🎯 Skill Priorities & Roadmap",
+    "📄 Resume Improvement",
+    "🔬 Model Evaluation",
+    "📚 Methodology",
+    "ℹ About"
 ]
 
 # ---------------------------------------------------------
-# SESSION STATE INITIALIZATION (BEFORE ANY WIDGET INSTANTIATION)
+# SESSION STATE INITIALIZATION
 # ---------------------------------------------------------
 if 'app_active_page' not in st.session_state:
-    st.session_state['app_active_page'] = "🏠 Dashboard & Resume Analyzer"
+    st.session_state['app_active_page'] = "🏠 Home / Dashboard"
 if 'current_analysis' not in st.session_state:
     st.session_state['current_analysis'] = None
 if 'resume_text' not in st.session_state:
@@ -205,7 +265,6 @@ if 'job_title' not in st.session_state:
 def cached_transformer_model():
     return get_transformer_model()
 
-# Warmup model
 cached_transformer_model()
 
 # ---------------------------------------------------------
@@ -223,8 +282,7 @@ if st.session_state.get("demo_requested"):
         st.session_state['job_title']
     )
     st.session_state['current_analysis'] = res
-    # Update widget session state BEFORE creating the radio widget!
-    st.session_state['app_active_page'] = "📊 AI Job Match Score"
+    st.session_state['app_active_page'] = "📊 AI Job Match"
     st.session_state['demo_requested'] = False
 
 if st.session_state.get("analysis_requested"):
@@ -235,18 +293,17 @@ if st.session_state.get("analysis_requested"):
             st.session_state['job_title']
         )
         st.session_state['current_analysis'] = res
-        # Update widget session state BEFORE creating the radio widget!
-        st.session_state['app_active_page'] = "📊 AI Job Match Score"
+        st.session_state['app_active_page'] = "📊 AI Job Match"
     st.session_state['analysis_requested'] = False
 
 # Sidebar Brand Header
 st.sidebar.markdown("## ✦ SKILLMATCH AI")
 st.sidebar.caption("Resume Intelligence & Skill Gap Analyzer")
 
-# Sidebar Navigation Control (Bound directly to key="app_active_page")
+# Sidebar Navigation Widget
 page = st.sidebar.radio(
-    "SELECT PAGE SECTION:",
-    NAV_OPTIONS,
+    "NAVIGATION MENU:",
+    NAV_PAGES,
     key="app_active_page"
 )
 
@@ -258,141 +315,158 @@ def trigger_analysis_callback():
     st.session_state["analysis_requested"] = True
 
 # ---------------------------------------------------------
-# PAGE 1: DASHBOARD & RESUME ANALYZER
+# TOP BRAND & HEADER BAR
 # ---------------------------------------------------------
-if page == "🏠 Dashboard & Resume Analyzer":
+st.markdown("""
+<div class="top-header-bar">
+    <div class="top-brand">
+        <div class="top-brand-title">✦ SKILLMATCH <span>AI</span></div>
+        <div class="top-brand-sub">Resume Intelligence & Skill Gap Analyzer</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-size:0.8rem; background:rgba(0,242,254,0.1); color:#00f2fe; padding:4px 10px; border-radius:12px; border:1px solid rgba(0,242,254,0.3);">
+            384-D Vector Engine Active
+        </span>
+        <span style="font-weight:700; font-size:0.85rem; color:#f1f5f9;">M Megana</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# PAGE 1: 🏠 HOME / DASHBOARD
+# ---------------------------------------------------------
+if page == "🏠 Home / Dashboard":
     st.markdown("""
-    <div class="brand-header">
-        <div class="gradient-title">✦ SKILLMATCH AI</div>
-        <div class="subtitle">Discover your resume's true skill gap using 384-D semantic embeddings.</div>
+    <div class="hero-banner">
+        <div class="hero-title">Discover Your Resume's True <span class="gradient-highlight">Skill Gap</span></div>
+        <div class="hero-subtitle">AI-powered resume analysis to match your skills with job requirements and get personalized recommendations.</div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Feature indicators
+    # Feature indicators matching screenshot
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.info("⚡ **Accurate Matching**\n\nNLP + Semantic Vectors")
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(16,185,129,0.15); color:#10b981;">⚡</div>
+            <div>
+                <div style="font-weight:700; font-size:0.85rem;">Accurate Skill Matching</div>
+                <div style="font-size:0.72rem; color:#64748b;">NLP + Semantic AI</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     with col2:
-        st.info("📊 **Gap Analysis**\n\nIdentify missing skills")
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(155,81,224,0.15); color:#9b51e0;">📊</div>
+            <div>
+                <div style="font-weight:700; font-size:0.85rem;">Detailed Gap Analysis</div>
+                <div style="font-size:0.72rem; color:#64748b;">Identify missing skills</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     with col3:
-        st.info("💡 **Learning Roadmap**\n\nPersonalized 4-8 wk plan")
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(245,158,11,0.15); color:#f59e0b;">💡</div>
+            <div>
+                <div style="font-weight:700; font-size:0.85rem;">Personalized Roadmap</div>
+                <div style="font-size:0.72rem; color:#64748b;">Learn the right skills</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     with col4:
-        st.info("💼 **Career Boost**\n\nBe job-ready")
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(59,130,246,0.15); color:#3b82f6;">💼</div>
+            <div>
+                <div style="font-weight:700; font-size:0.85rem;">Boost Career Opportunities</div>
+                <div style="font-size:0.72rem; color:#64748b;">Be job-ready</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown("---")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # Quick Demo Option
-    demo_col1, demo_col2 = st.columns([3, 1])
-    with demo_col1:
-        st.subheader("⚡ Quick Start Demo")
-        st.caption("Click '✨ TRY DEMO' to immediately analyze a sample resume against Junior AI/ML Engineer requirements.")
-    with demo_col2:
-        st.button("✨ TRY DEMO", on_click=trigger_demo_callback, use_container_width=True)
-
-    st.markdown("---")
-
-    # Input Cards
-    in_col1, in_col2 = st.columns(2)
+    # 3-Column Input Grid matching reference screenshot
+    in_col1, in_col2, in_col3 = st.columns([1, 1, 0.8])
 
     with in_col1:
-        st.subheader("📄 YOUR RESUME")
-        input_type = st.radio("Resume Mode", ["Upload PDF", "Paste Raw Text"], horizontal=True, key="resume_input_mode_radio")
+        st.subheader("1. Your Resume")
+        st.caption("Upload your resume (PDF) or paste your resume text")
+        input_type = st.radio("Resume Input Mode", ["Upload PDF", "Paste Text"], horizontal=True, key="home_resume_mode")
 
         if input_type == "Upload PDF":
-            uploaded_pdf = st.file_uploader("Upload PDF Resume (Max 5MB)", type=["pdf"], key="pdf_uploader_widget")
+            uploaded_pdf = st.file_uploader("Upload PDF Resume (Max 5MB)", type=["pdf"], key="home_pdf_uploader")
             if uploaded_pdf is not None:
                 pdf_bytes = uploaded_pdf.read()
                 extracted = extract_text_from_pdf_bytes(pdf_bytes)
                 if extracted:
                     st.session_state['resume_text'] = extracted
-                    st.success(f"✓ PDF extracted successfully ({len(extracted)} characters).")
+                    st.success(f"✓ {uploaded_pdf.name} ({(uploaded_pdf.size / 1024 / 1024):.1f} MB) • Ready to analyze")
                 else:
                     st.error("Unable to extract text from this PDF. Please try another PDF or paste text.")
         else:
             st.session_state['resume_text'] = st.text_area(
                 "Paste Resume Text",
                 value=st.session_state['resume_text'],
-                height=250,
+                height=220,
                 placeholder="Paste work experience, skills, projects...",
-                key="resume_text_area_widget"
+                key="home_resume_textarea"
             )
 
     with in_col2:
-        st.subheader("💼 TARGET JOB REQUIREMENT")
-        job_type = st.radio("Job Mode", ["Select Role Template", "Paste Job Description"], horizontal=True, key="job_input_mode_radio")
+        st.subheader("2. Target Job Requirement")
+        st.caption("Enter the job description or select a template")
+        job_type = st.radio("Job Input Mode", ["Paste Job Description", "Use Template"], horizontal=True, key="home_job_mode")
 
-        if job_type == "Select Role Template":
+        if job_type == "Use Template":
             template_options = {t['title']: t for t in JOB_TEMPLATES.values()}
-            selected_name = st.selectbox("Select Target Role Template", list(template_options.keys()), key="role_template_select_widget")
+            selected_name = st.selectbox("Select Target Role Template", list(template_options.keys()), key="home_role_select")
             selected_t = template_options[selected_name]
             st.session_state['job_title'] = selected_t['title']
             st.session_state['job_desc'] = selected_t['description']
-            st.text_area("Template Description", value=st.session_state['job_desc'], height=200, disabled=True, key="template_desc_readonly_widget")
+            st.text_area("Template Requirements", value=st.session_state['job_desc'], height=180, disabled=True, key="home_template_preview")
         else:
-            st.session_state['job_title'] = st.text_input("Job Title", value=st.session_state['job_title'], key="job_title_input_widget")
-            st.session_state['job_desc'] = st.text_area("Job Description", value=st.session_state['job_desc'], height=200, key="job_desc_area_widget")
+            st.session_state['job_title'] = st.text_input("Job Title", value=st.session_state['job_title'], key="home_job_title_input")
+            st.session_state['job_desc'] = st.text_area("Job Description", value=st.session_state['job_desc'], height=180, key="home_job_desc_textarea")
 
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.button("🚀 ANALYZE RESUME NOW", on_click=trigger_analysis_callback, use_container_width=True)
+    with in_col3:
+        st.subheader("★ Quick Options")
+        st.markdown("""
+        <div style="background:#101728; border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px; margin-bottom:16px;">
+            <div style="font-weight:700; font-size:0.9rem; color:#00f2fe; margin-bottom:4px;">✨ Try Demo</div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:12px;">Load sample resume & job description</div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.button("✨ TRY DEMO", on_click=trigger_demo_callback, use_container_width=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.button("✨ Analyze Resume →", on_click=trigger_analysis_callback, use_container_width=True)
 
 # ---------------------------------------------------------
-# PAGE 2: AI JOB MATCH SCORE
+# PAGE 2: 📊 AI JOB MATCH SCORE (MATCHING ATTACHED SCREENSHOT)
 # ---------------------------------------------------------
-elif page == "📊 AI Job Match Score":
+elif page == "📊 AI Job Match":
     st.title("📊 AI Job Match Score Results")
     
     res = st.session_state['current_analysis']
     if not res:
-        st.warning("No analysis available yet. Please go to '🏠 Dashboard & Resume Analyzer' to run an analysis.")
+        st.warning("No analysis available yet. Please go to '🏠 Home / Dashboard' or click '✨ TRY DEMO'.")
     else:
         st.caption(f"Target Role: **{res['job_title']}** | Evaluated in {res['latency_seconds']}s")
 
-        # Top Metric Cards
-        m_col1, m_col2, m_col3, m_col4 = st.columns(4)
-        with m_col1:
-            st.markdown(f"""
-            <div class="metric-card">
-                <div class="metric-label">Overall Match</div>
-                <div class="metric-value" style="color:#00f2fe;">{res['overall_score']}%</div>
-                <div style="font-size:0.8rem; color:#10b981; font-weight:700;">{res['match_level']}</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with m_col2:
-            st.markdown(f"""
-            <div class="metric-card">
-                <div class="metric-label">Strong Matches</div>
-                <div class="metric-value" style="color:#10b981;">{res['matching_count']}</div>
-                <div style="font-size:0.75rem; color:#94a3b8;">&ge;82% Similarity</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with m_col3:
-            st.markdown(f"""
-            <div class="metric-card">
-                <div class="metric-label">Partial Matches</div>
-                <div class="metric-value" style="color:#f59e0b;">{res['partial_count']}</div>
-                <div style="font-size:0.75rem; color:#94a3b8;">45% - 81% Similarity</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with m_col4:
-            st.markdown(f"""
-            <div class="metric-card">
-                <div class="metric-label">Missing Skills</div>
-                <div class="metric-value" style="color:#ef4444;">{res['missing_count']}</div>
-                <div style="font-size:0.75rem; color:#94a3b8;">&lt;45% Similarity</div>
-            </div>
-            """, unsafe_allow_html=True)
+        # Top Row 3 Primary Cards matching reference image layout
+        top_c1, top_c2, top_c3 = st.columns([1.1, 1.1, 1.2])
 
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        g_col1, g_col2 = st.columns([1, 1])
-
-        # Plotly Score Gauge
-        with g_col1:
+        # CARD 1: AI JOB MATCH SCORE & GAUGE
+        with top_c1:
+            st.markdown("### 🔮 AI JOB MATCH SCORE")
             fig_gauge = go.Figure(go.Indicator(
                 mode = "gauge+number",
                 value = res['overall_score'],
-                number = {'suffix': "%", 'font': {'color': "#00f2fe", 'size': 44}},
-                title = {'text': "Resume-Job Match Score", 'font': {'color': "#f1f5f9", 'size': 18}},
+                number = {'suffix': "%", 'font': {'color': "#00f2fe", 'size': 38, 'family': 'Plus Jakarta Sans'}},
+                title = {'text': f"{res['match_level'].upper()}", 'font': {'color': "#10b981" if res['overall_score']>=75 else "#f59e0b", 'size': 14}},
                 gauge = {
                     'axis': {'range': [0, 100], 'tickcolor': "#94a3b8"},
                     'bar': {'color': "#00f2fe"},
@@ -404,24 +478,98 @@ elif page == "📊 AI Job Match Score":
                     ]
                 }
             ))
-            fig_gauge.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=280)
+            fig_gauge.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=220, margin=dict(l=20, r=20, t=30, b=10))
             st.plotly_chart(fig_gauge, use_container_width=True)
 
-        # Formula Explanation Card
-        with g_col2:
-            st.subheader("SCORE CALCULATION EXPLANATION")
-            st.caption("Transparent weighted scoring equation:")
-            st.markdown(f"""
-            <div class="formula-box">
-                • <b>35% Document Similarity:</b> {res['document_similarity']}%<br>
-                • <b>45% Direct Skill Coverage:</b> {res['direct_skill_coverage']}%<br>
-                • <b>20% Partial Concept Coverage:</b> {res['partial_concept_coverage']}%<br>
-                <hr style="border-color:rgba(255,255,255,0.1);">
-                <b>Formula Total:</b> {res['score_calculation']['document_similarity_weighted']}% + {res['score_calculation']['direct_coverage_weighted']}% + {res['score_calculation']['partial_coverage_weighted']}% = <span style="color:#00f2fe; font-weight:800;">{res['overall_score']}%</span>
-            </div>
-            """, unsafe_allow_html=True)
+            m_col1, m_col2, m_col3 = st.columns(3)
+            with m_col1:
+                st.markdown(f"<div class='metric-card'><div class='metric-lbl'>Total</div><div class='metric-val'>{res['total_skills_detected']}</div></div>", unsafe_allow_html=True)
+            with m_col2:
+                st.markdown(f"<div class='metric-card'><div class='metric-lbl'>Matching</div><div class='metric-val' style='color:#10b981;'>{res['matching_count']}</div></div>", unsafe_allow_html=True)
+            with m_col3:
+                st.markdown(f"<div class='metric-card'><div class='metric-lbl'>Missing</div><div class='metric-val' style='color:#ef4444;'>{res['missing_count']}</div></div>", unsafe_allow_html=True)
 
-        # Skill Pills
+        # CARD 2: SKILL BREAKDOWN DONUT
+        with top_c2:
+            st.markdown("### 📌 SKILL BREAKDOWN")
+            donut_data = {
+                'Status': ['Matching Skills', 'Missing Skills', 'Additional Skills', 'Partial Match'],
+                'Count': [res['matching_count'], res['missing_count'], res['additional_count'], res['partial_count']]
+            }
+            fig_pie = px.pie(
+                donut_data,
+                names='Status',
+                values='Count',
+                hole=0.55,
+                color='Status',
+                color_discrete_map={
+                    'Matching Skills': '#10b981',
+                    'Missing Skills': '#ef4444',
+                    'Additional Skills': '#3b82f6',
+                    'Partial Match': '#f59e0b'
+                }
+            )
+            fig_pie.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font_color='#94a3b8',
+                height=220,
+                margin=dict(l=10, r=10, t=10, b=10),
+                legend=dict(orientation="v", y=0.5)
+            )
+            st.plotly_chart(fig_pie, use_container_width=True)
+
+        # CARD 3: TOP MATCHING SKILLS PROGRESS BARS
+        with top_c3:
+            st.markdown("### 🏆 TOP MATCHING SKILLS")
+            for s in res['top_matching_skills'][:5]:
+                st.progress(s['similarity'] / 100.0, text=f"**{s['skill']}** ({s['similarity']}%)")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Bottom Row 4 Grid Cards matching reference image
+        b_col1, b_col2, b_col3, b_col4 = st.columns([1, 1, 1.2, 1.2])
+
+        with b_col1:
+            st.markdown("### 🎯 MISSING SKILLS")
+            for m in res['missing_skills']:
+                st.progress(m['similarity'] / 100.0, text=f"**{m['skill']}** ({m['similarity']}%)")
+
+        with b_col2:
+            st.markdown("### ⭐ ADDITIONAL SKILLS")
+            for a in res['additional_skills']:
+                st.markdown(f"<span class='pill-badge pill-additional'>{a['skill']}</span>", unsafe_allow_html=True)
+
+        with b_col3:
+            st.markdown("### ⚡ WHAT-IF SIMULATOR")
+            st.caption("Select skills to see potential match score:")
+            available_missing = [m['skill'] for m in res['missing_skills']] + [p['skill'] for p in res['partial_matches']]
+            if available_missing:
+                selected_to_acquire = st.multiselect("Acquire Skills:", options=available_missing, key="results_whatif_multiselect")
+                sim_res = HybridMatcher.simulate_what_if(selected_to_acquire, res)
+                st.markdown(f"**Current:** {res['overall_score']}% ➔ **Projected:** <span style='color:#10b981; font-weight:800;'>{sim_res['projected_score']}% (+{sim_res['estimated_boost']}%)</span>", unsafe_allow_html=True)
+
+        with b_col4:
+            st.markdown("### 🚀 LEARNING ROADMAP")
+            for week in res['roadmap'][:3]:
+                st.markdown(f"**{week['week_range']}:** {week['title']}")
+                st.caption(week['goal'])
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Formula Explanation Card
+        st.subheader("SCORE CALCULATION EXPLANATION")
+        st.markdown(f"""
+        <div class="formula-box">
+            • <b>35% Document Semantic Similarity:</b> {res['document_similarity']}%<br>
+            • <b>45% Direct Skill Coverage:</b> {res['direct_skill_coverage']}%<br>
+            • <b>20% Partial Concept Coverage:</b> {res['partial_concept_coverage']}%<br>
+            <hr style="border-color:rgba(255,255,255,0.1);">
+            <b>Formula Total:</b> {res['score_calculation']['document_similarity_weighted']}% + {res['score_calculation']['direct_coverage_weighted']}% + {res['score_calculation']['partial_coverage_weighted']}% = <span style="color:#00f2fe; font-weight:800;">{res['overall_score']}%</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Skill Pills Summary
         st.markdown("### ✓ STRONG MATCHES (≥82% Similarity)")
         s_pills = "".join([f'<span class="pill-badge pill-strong">{s["skill"]} ({s["similarity"]}%)</span>' for s in res['strong_matches']])
         st.markdown(s_pills if s_pills else "*No direct strong matches*", unsafe_allow_html=True)
@@ -430,23 +578,15 @@ elif page == "📊 AI Job Match Score":
         p_pills = "".join([f'<span class="pill-badge pill-partial">{p["skill"]} ({p["similarity"]}% • {p["resume_concept"]})</span>' for p in res['partial_matches']])
         st.markdown(p_pills if p_pills else "*No partial matches*", unsafe_allow_html=True)
 
-        st.markdown("### ✕ MISSING SKILLS (<45% Similarity)")
-        m_pills = "".join([f'<span class="pill-badge pill-missing">{m["skill"]} ({m["similarity"]}% • {m["priority"]} Priority)</span>' for m in res['missing_skills']])
-        st.markdown(m_pills if m_pills else "*No missing skills*", unsafe_allow_html=True)
-
-        st.markdown("### ➕ ADDITIONAL CANDIDATE SKILLS")
-        a_pills = "".join([f'<span class="pill-badge pill-additional">{a["skill"]} ({a["category"]})</span>' for a in res['additional_skills']])
-        st.markdown(a_pills if a_pills else "*No additional skills*", unsafe_allow_html=True)
-
 # ---------------------------------------------------------
-# PAGE 3: SKILL ANALYSIS
+# PAGE 3: 🧠 SKILL ANALYSIS
 # ---------------------------------------------------------
-elif page == "🧠 Skill Analysis & Breakdown":
+elif page == "🧠 Skill Analysis":
     st.title("🧠 AI Skill Analysis & Categorization")
     
     res = st.session_state['current_analysis']
     if not res:
-        st.warning("No analysis available. Please run an analysis on the Dashboard.")
+        st.warning("No analysis available. Please run an analysis on the Dashboard or click '✨ TRY DEMO'.")
     else:
         c1, c2 = st.columns(2)
 
@@ -467,7 +607,7 @@ elif page == "🧠 Skill Analysis & Breakdown":
                 st.plotly_chart(fig_bar, use_container_width=True)
 
         with c2:
-            st.subheader("Skill Status Distribution")
+            st.subheader("Skill Status Breakdown")
             donut_data = {
                 'Status': ['Matching', 'Partial', 'Missing', 'Additional'],
                 'Count': [res['matching_count'], res['partial_count'], res['missing_count'], res['additional_count']]
@@ -488,7 +628,7 @@ elif page == "🧠 Skill Analysis & Breakdown":
             st.progress(s['similarity'] / 100.0, text=f"**{s['skill']}** ({s['similarity']}%) — {s['category']}")
 
 # ---------------------------------------------------------
-# PAGE 4: EXPLAINABLE AI & SIMULATOR
+# PAGE 4: 💡 EXPLAINABLE AI & SIMULATOR
 # ---------------------------------------------------------
 elif page == "💡 Explainable AI & Simulator":
     st.title("💡 Explainable AI & Skill Improvement Simulator")
@@ -518,7 +658,7 @@ elif page == "💡 Explainable AI & Simulator":
                 selected_to_acquire = st.multiselect(
                     "Select Skills You Plan to Learn:",
                     options=available_missing,
-                    key="what_if_multiselect_widget"
+                    key="tab_what_if_multiselect"
                 )
 
                 sim_result = HybridMatcher.simulate_what_if(selected_to_acquire, res)
@@ -534,9 +674,9 @@ elif page == "💡 Explainable AI & Simulator":
                 st.caption(f"📌 *{sim_result['disclaimer']}*")
 
 # ---------------------------------------------------------
-# PAGE 5: SKILL PRIORITIES & ROADMAP
+# PAGE 5: 🎯 SKILL PRIORITIES & ROADMAP
 # ---------------------------------------------------------
-elif page == "🎯 Skill Priorities & Learning Roadmap":
+elif page == "🎯 Skill Priorities & Roadmap":
     st.title("🎯 Skill Priorities & Personalized Roadmap")
     
     res = st.session_state['current_analysis']
@@ -561,9 +701,9 @@ elif page == "🎯 Skill Priorities & Learning Roadmap":
                     st.info(f"💡 **Practice:** {week['practice_recommendation']}")
 
 # ---------------------------------------------------------
-# PAGE 6: RESUME IMPROVEMENT
+# PAGE 6: 📄 RESUME IMPROVEMENT
 # ---------------------------------------------------------
-elif page == "📄 Resume Improvement Suggestions":
+elif page == "📄 Resume Improvement":
     st.title("📄 Resume Improvement Suggestions")
     
     res = st.session_state['current_analysis']
@@ -585,9 +725,9 @@ elif page == "📄 Resume Improvement Suggestions":
             st.markdown("---")
 
 # ---------------------------------------------------------
-# PAGE 7: MODEL EVALUATION
+# PAGE 7: 🔬 MODEL EVALUATION
 # ---------------------------------------------------------
-elif page == "🔬 AI Model Evaluation":
+elif page == "🔬 Model Evaluation":
     st.title("🔬 AI Model Evaluation Framework")
     st.caption("Empirical runtime latency metrics and evaluation guidelines.")
 
@@ -612,9 +752,9 @@ elif page == "🔬 AI Model Evaluation":
     """)
 
 # ---------------------------------------------------------
-# PAGE 8: METHODOLOGY
+# PAGE 8: 📚 METHODOLOGY
 # ---------------------------------------------------------
-elif page == "📚 Methodology & Viva Guide":
+elif page == "📚 Methodology":
     st.title("📚 AI Methodology & Technical Viva Guide")
     st.markdown("""
     ### 1. Primary Semantic Model
@@ -634,9 +774,9 @@ elif page == "📚 Methodology & Viva Guide":
     """)
 
 # ---------------------------------------------------------
-# PAGE 9: ABOUT SYSTEM
+# PAGE 9: ℹ ABOUT
 # ---------------------------------------------------------
-elif page == "ℹ About System":
+elif page == "ℹ About":
     st.title("ℹ About SKILLMATCH AI")
     st.markdown("""
     **SKILLMATCH AI** is an AI/ML Resume Intelligence application designed for B.Tech / M.Tech academic evaluation and career intelligence.
