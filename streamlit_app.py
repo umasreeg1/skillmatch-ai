@@ -186,7 +186,9 @@ NAV_OPTIONS = [
     "ℹ About System"
 ]
 
-# Session State Initialization (MUST OCCUR BEFORE CREATING ANY WIDGET)
+# ---------------------------------------------------------
+# SESSION STATE & EARLY CALLBACK EXECUTION
+# ---------------------------------------------------------
 if 'current_analysis' not in st.session_state:
     st.session_state.current_analysis = None
 if 'resume_text' not in st.session_state:
@@ -195,19 +197,8 @@ if 'job_desc' not in st.session_state:
     st.session_state.job_desc = JOB_TEMPLATES['junior_aiml']['description']
 if 'job_title' not in st.session_state:
     st.session_state.job_title = JOB_TEMPLATES['junior_aiml']['title']
-
-# Handle Pending Navigation Redirect BEFORE Widget Creation
 if 'current_page' not in st.session_state:
     st.session_state.current_page = "🏠 Dashboard & Resume Analyzer"
-
-if 'pending_redirect' in st.session_state and st.session_state.pending_redirect:
-    st.session_state.current_page = st.session_state.pending_redirect
-    del st.session_state.pending_redirect
-
-# Determine index for sidebar radio widget
-default_nav_index = 0
-if st.session_state.current_page in NAV_OPTIONS:
-    default_nav_index = NAV_OPTIONS.index(st.session_state.current_page)
 
 # Pre-load & cache SentenceTransformer model
 @st.cache_resource
@@ -217,27 +208,60 @@ def cached_transformer_model():
 # Warmup model
 cached_transformer_model()
 
+# Process Pending Demo Request BEFORE Rendering Any Widgets
+if st.session_state.get("run_demo_requested"):
+    st.session_state.resume_text = DEMO_RESUME_TEXT
+    st.session_state.job_desc = JOB_TEMPLATES['junior_aiml']['description']
+    st.session_state.job_title = JOB_TEMPLATES['junior_aiml']['title']
+    
+    # Run real NLP analysis pipeline
+    res = HybridMatcher.analyze(
+        st.session_state.resume_text,
+        st.session_state.job_desc,
+        st.session_state.job_title
+    )
+    st.session_state.current_analysis = res
+    st.session_state.current_page = "📊 AI Job Match Score"
+    st.session_state.run_demo_requested = False
+
+# Process Pending Manual Analysis Request BEFORE Rendering Any Widgets
+if st.session_state.get("run_analysis_requested"):
+    if st.session_state.resume_text.strip() and st.session_state.job_desc.strip():
+        res = HybridMatcher.analyze(
+            st.session_state.resume_text,
+            st.session_state.job_desc,
+            st.session_state.job_title
+        )
+        st.session_state.current_analysis = res
+        st.session_state.current_page = "📊 AI Job Match Score"
+    st.session_state.run_analysis_requested = False
+
+# Calculate safe default index for sidebar radio widget
+default_nav_index = 0
+if st.session_state.current_page in NAV_OPTIONS:
+    default_nav_index = NAV_OPTIONS.index(st.session_state.current_page)
+
 # Sidebar Brand Header
 st.sidebar.markdown("## ✦ SKILLMATCH AI")
 st.sidebar.caption("Resume Intelligence & Skill Gap Analyzer")
 
-# Sidebar Navigation Widget (Created safely using index)
+# Sidebar Navigation Control (Created with index, no state conflict)
 page = st.sidebar.radio(
     "SELECT PAGE SECTION:",
     NAV_OPTIONS,
     index=default_nav_index,
-    key="sidebar_radio_widget_select"
+    key="sidebar_nav_radio"
 )
 
 # Synchronize current_page with user selection
 st.session_state.current_page = page
 
-# Helper Function to Run Analysis Pipeline
-def run_analysis_pipeline(resume_txt, job_txt, j_title):
-    with st.spinner("🧠 Running SentenceTransformer embeddings (384-D) & Cosine Matcher..."):
-        res = HybridMatcher.analyze(resume_txt, job_txt, j_title)
-        st.session_state.current_analysis = res
-        return res
+# Callbacks for Buttons
+def trigger_demo_callback():
+    st.session_state.run_demo_requested = True
+
+def trigger_analysis_callback():
+    st.session_state.run_analysis_requested = True
 
 # ---------------------------------------------------------
 # PAGE 1: DASHBOARD & RESUME ANALYZER
@@ -269,14 +293,7 @@ if page == "🏠 Dashboard & Resume Analyzer":
         st.subheader("⚡ Quick Start Demo")
         st.caption("Click '✨ TRY DEMO' to immediately analyze a sample resume against Junior AI/ML Engineer requirements.")
     with demo_col2:
-        if st.button("✨ TRY DEMO", use_container_width=True):
-            st.session_state.resume_text = DEMO_RESUME_TEXT
-            st.session_state.job_desc = JOB_TEMPLATES['junior_aiml']['description']
-            st.session_state.job_title = JOB_TEMPLATES['junior_aiml']['title']
-            run_analysis_pipeline(DEMO_RESUME_TEXT, st.session_state.job_desc, st.session_state.job_title)
-            # Safe redirect without modifying instantiated widget keys
-            st.session_state.pending_redirect = "📊 AI Job Match Score"
-            st.rerun()
+        st.button("✨ TRY DEMO", on_click=trigger_demo_callback, use_container_width=True)
 
     st.markdown("---")
 
@@ -321,16 +338,7 @@ if page == "🏠 Dashboard & Resume Analyzer":
             st.session_state.job_desc = st.text_area("Job Description", value=st.session_state.job_desc, height=200)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("🚀 ANALYZE RESUME NOW", use_container_width=True):
-        if not st.session_state.resume_text.strip():
-            st.error("Please upload a PDF resume or paste resume text.")
-        elif not st.session_state.job_desc.strip():
-            st.error("Please select a job template or paste a target job description.")
-        else:
-            run_analysis_pipeline(st.session_state.resume_text, st.session_state.job_desc, st.session_state.job_title)
-            # Safe redirect without modifying instantiated widget keys
-            st.session_state.pending_redirect = "📊 AI Job Match Score"
-            st.rerun()
+    st.button("🚀 ANALYZE RESUME NOW", on_click=trigger_analysis_callback, use_container_width=True)
 
 # ---------------------------------------------------------
 # PAGE 2: AI JOB MATCH SCORE
